@@ -1,0 +1,6 @@
+{
+  "name": "Girmaic AI Global E-Book Studio",
+  "description": "Professional AI publishing platform by Girma Haile Bunaro for digital books, audiobooks, and multilingual commerce on Ye-Buna Digitals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

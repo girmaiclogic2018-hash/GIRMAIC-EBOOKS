@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "Book": {
+      "title": "Book",
+      "description": "Book catalog entity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "subtitle": { "type": "string", "maxLength": 512 },
+        "authorId": { "type": "string", "maxLength": 128 },
+        "description": { "type": "string", "maxLength": 2048 },
+        "category": { "type": "string", "maxLength": 64 },
+        "language": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "enum": ["DRAFT", "READY", "PUBLISHED", "ARCHIVED"] },
+        "priceETB": { "type": "number" },
+        "priceUSD": { "type": "number" },
+        "pageCount": { "type": "number" },
+        "wordCount": { "type": "number" },
+        "coverUrl": { "type": "string", "maxLength": 1024 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "authorId", "status", "priceUSD"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile and role entity",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "format": "email", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["CUSTOMER", "EDITOR", "ADMIN", "FOUNDER"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer book purchase order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "bookId": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 8 },
+        "status": { "type": "string", "enum": ["PENDING", "PAID", "FAILED", "REFUNDED"] },
+        "paymentProvider": { "type": "string", "maxLength": 64 },
+        "transactionId": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "bookId", "amount", "status"]
+    },
+    "Chapter": {
+      "title": "Chapter",
+      "description": "Book chapter content",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "bookId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 256 },
+        "content": { "type": "string" },
+        "orderIndex": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "bookId", "title", "orderIndex"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Payment verification record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "orderId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "currency": { "type": "string", "maxLength": 8 },
+        "status": { "type": "string", "enum": ["SUCCESS", "FAILED", "PENDING"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "orderId", "userId", "amount", "status"]
+    },
+    "Entitlement": {
+      "title": "Entitlement",
+      "description": "User book library access entitlement",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "bookId": { "type": "string", "maxLength": 128 },
+        "grantedAt": { "type": "string", "format": "date-time" },
+        "sourceOrderId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "userId", "bookId"]
+    }
+  },
+  "firestore": {
+    "/books/{bookId}": {
+      "schema": { "$ref": "#/entities/Book" },
+      "description": "Global book catalog"
+    },
+    "/books/{bookId}/chapters/{chapterId}": {
+      "schema": { "$ref": "#/entities/Chapter" },
+      "description": "Book chapters"
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Purchase orders"
+    },
+    "/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Payment records"
+    },
+    "/entitlements/{entitlementId}": {
+      "schema": { "$ref": "#/entities/Entitlement" },
+      "description": "Customer library entitlements"
+    }
+  }
+}
